@@ -1,6 +1,7 @@
 package com.cardano_lms.server.Config;
 
 import com.cardano_lms.server.OAuth2.CustomOAuth2SuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
@@ -57,13 +59,16 @@ public class SecurityConfig {
         private final CustomJwtDecoder customJwtDecoder;
         private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
         private final JwtCookieFilter jwtCookieFilter;
+        private final ClientRegistrationRepository clientRegistrationRepository;
 
         public SecurityConfig(@Lazy CustomJwtDecoder customJwtDecoder, 
-                              @Lazy CustomOAuth2SuccessHandler customOAuth2SuccessHandler, 
-                              JwtCookieFilter jwtCookieFilter) {
+                              @Lazy @Autowired(required = false) CustomOAuth2SuccessHandler customOAuth2SuccessHandler, 
+                              JwtCookieFilter jwtCookieFilter,
+                              @Autowired(required = false) ClientRegistrationRepository clientRegistrationRepository) {
                 this.customJwtDecoder = customJwtDecoder;
                 this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
                 this.jwtCookieFilter = jwtCookieFilter;
+                this.clientRegistrationRepository = clientRegistrationRepository;
         }
 
         @Bean
@@ -84,8 +89,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                                                 .anyRequest().authenticated());
 
-                httpSecurity.oauth2Login(oauth2 -> oauth2
-                                .successHandler(customOAuth2SuccessHandler));
+                if (clientRegistrationRepository != null && customOAuth2SuccessHandler != null) {
+                        httpSecurity.oauth2Login(oauth2 -> oauth2
+                                        .successHandler(customOAuth2SuccessHandler));
+                }
                 
                 httpSecurity.oauth2ResourceServer(oauth2 -> oauth2
                                 .jwt(jwtConfigurer -> jwtConfigurer
