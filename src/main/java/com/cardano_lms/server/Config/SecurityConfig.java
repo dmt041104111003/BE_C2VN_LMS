@@ -39,6 +39,7 @@ public class SecurityConfig {
                         "/api/auth/reset-password"
         };
         private final String[] PUBLIC_GET_ENDPOINTS = {
+                        "/health",
                         "/api/media",
                         "/api/tags",
                         "/api/course/search",
