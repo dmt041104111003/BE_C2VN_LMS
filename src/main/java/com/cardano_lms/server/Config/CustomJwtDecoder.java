@@ -19,7 +19,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class CustomJwtDecoder implements JwtDecoder {
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.signer-key}")
     private String signerKey;
 
     private final AuthenticationService authenticationService;
