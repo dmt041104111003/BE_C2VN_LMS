@@ -17,13 +17,14 @@ COPY src ./src
 # Build source code with maven
 RUN mvn -q package -DskipTests
 
-#Stage 2: create image
-# Start with Amazon Correto JDK 21
+# Stage 2: create image
 FROM amazoncorretto:21.0.4
 
-# Set working folder to App and copy complied file from above step
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Expose port for Render
+EXPOSE 8080
+
+# Command to run the application with optimized JVM settings for containers
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
