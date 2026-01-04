@@ -89,7 +89,8 @@ public enum ErrorCode {
     CERTIFICATE_ALREADY_EXISTS(1076, "Chứng chỉ đã được cấp cho khóa học này", HttpStatus.BAD_REQUEST),
     INVALID_REQUEST(1077, "Yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     BATCH_LIMIT_EXCEEDED(1078, "Tối đa 15 chứng chỉ mỗi lần cấp", HttpStatus.BAD_REQUEST),
-    NO_ELIGIBLE_STUDENTS(1079, "Không có học viên đủ điều kiện để cấp chứng chỉ", HttpStatus.BAD_REQUEST);
+    NO_ELIGIBLE_STUDENTS(1079, "Không có học viên đủ điều kiện để cấp chứng chỉ", HttpStatus.BAD_REQUEST),
+    TOO_MANY_REQUESTS(1080, "Quá nhiều yêu cầu. Vui lòng thử lại sau", HttpStatus.TOO_MANY_REQUESTS);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
