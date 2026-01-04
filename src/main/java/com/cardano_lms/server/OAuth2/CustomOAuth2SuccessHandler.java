@@ -22,6 +22,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@ConditionalOnBean(ClientRegistrationRepository.class)
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final AuthenticationService authenticationService;
