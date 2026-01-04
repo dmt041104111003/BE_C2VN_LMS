@@ -13,8 +13,8 @@ import com.cardano_lms.server.Service.GitHubEmailService;
 import com.cardano_lms.server.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final AuthenticationService authenticationService;
@@ -37,6 +36,21 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     private final UserService userService;
     private final GitHubEmailService gitHubEmailService;
     private final OAuth2AuthorizedClientRepository authorizedClientRepository;
+
+    public CustomOAuth2SuccessHandler(
+            AuthenticationService authenticationService,
+            UserRepository userRepository,
+            UserMapper userMapper,
+            UserService userService,
+            GitHubEmailService gitHubEmailService,
+            @Lazy OAuth2AuthorizedClientRepository authorizedClientRepository) {
+        this.authenticationService = authenticationService;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.userService = userService;
+        this.gitHubEmailService = gitHubEmailService;
+        this.authorizedClientRepository = authorizedClientRepository;
+    }
 
     @Value("${FRONTEND_URL}")
     private String FRONTEND_URL;
